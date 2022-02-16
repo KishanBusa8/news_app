@@ -1,6 +1,25 @@
-import 'package:flutter/material.dart';
+import 'dart:developer';
 
-void main() {
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:news_app/LocalDatabase/hive_database.dart';
+import 'package:news_app/Pages/home.dart';
+import 'package:news_app/Pages/login.dart';
+import 'package:news_app/Pages/splash.dart';
+import 'package:news_app/configs/instance_binding.dart';
+import 'package:news_app/configs/routes.dart';
+import 'package:news_app/configs/size_config.dart';
+import 'package:news_app/configs/theme_data.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await Firebase.initializeApp();
+    await HiveDatabase.initialize();
+  } catch (e) {
+    log('error in firebase initializeApp ' + e.toString());
+  }
   runApp(const MyApp());
 }
 
@@ -10,65 +29,21 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
+    SizeConfig().init(context);
+    return  GetMaterialApp(
+      title: 'NewsApp',
+      initialRoute: Routes.initialRoutes,
+      initialBinding: InstanceBinding(),
+      routes: {
+        Routes.initialRoutes: (context) => const Splash(),
+        Routes.login: (context) => LoginPage(),
+        Routes.homePage: (context) => const MyHomePage(),
+        // Routes.newsDetailPage: (context) => AddAddressPage(),
 
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      },
+      theme: ThemeClass.themeData,
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
 
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-
-        child: Column(
-
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-}
