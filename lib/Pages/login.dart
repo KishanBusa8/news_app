@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:news_app/Services/google_sign_in.dart';
 import 'package:news_app/configs/routes.dart';
 import 'package:news_app/configs/size_config.dart';
@@ -33,10 +34,12 @@ class LoginPage extends GetWidget<GoogleAuth> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              Lottie.asset('assets/img/googleLogo.json',height: 200),
+              SizedBox(height: 10,),
               SizedBox(
                   width: SizeConfig.screenWidth,
                   child: ButtonWidget(
-                      title: 'Google SignIn',
+                      title: 'SignIn with Google',
                       isLoading: controller.isLoading.value,
                       onpress: () {
                         login(controller);

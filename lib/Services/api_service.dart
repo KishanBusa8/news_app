@@ -34,7 +34,6 @@ class ApiService extends GetxController {
   Future<String?> getUserGreet() async {
     User user = await HiveDatabase.getUser();
     return "👋 Hey " + user.name!;
-
   }
 
    Future<List<Article>> getTopHeadLines(page) async {

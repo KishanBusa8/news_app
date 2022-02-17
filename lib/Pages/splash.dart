@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:lottie/lottie.dart';
 import 'package:news_app/LocalDatabase/hive_database.dart';
 import 'package:news_app/Utilities/constants.dart';
 import 'package:news_app/configs/routes.dart';
@@ -47,7 +48,7 @@ class _SplashState extends State<Splash> {
     return Scaffold(
      backgroundColor: ThemeClass.purpleColor,
       body: Center(
-
+        child:Lottie.asset('assets/img/lottieLogo.json',height: 250),
       ),
     );
   }

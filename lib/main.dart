@@ -11,6 +11,7 @@ import 'package:news_app/configs/instance_binding.dart';
 import 'package:news_app/configs/routes.dart';
 import 'package:news_app/configs/size_config.dart';
 import 'package:news_app/configs/theme_data.dart';
+import 'package:news_app/customWidgets/article_details.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
         Routes.initialRoutes: (context) => const Splash(),
         Routes.login: (context) => LoginPage(),
         Routes.homePage: (context) =>  MyHomePage(),
-        // Routes.newsDetailPage: (context) => AddAddressPage(),
+        Routes.newsDetailPage: (context) => ArticleDetails(),
 
       },
       theme: ThemeClass.themeData,
