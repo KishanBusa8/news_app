@@ -12,9 +12,9 @@ class LoginPage extends GetWidget<GoogleAuth> {
 
 
   login(GoogleAuth controller) async {
-    controller.isLoading = true;
+    controller.isLoading = RxBool(true);
     User? user = await controller.googleSignIn();
-    controller.isLoading = false;
+    controller.isLoading = RxBool(false);
 
     if (user != null) {
       Get.offAllNamed(Routes.homePage);
@@ -27,19 +27,20 @@ class LoginPage extends GetWidget<GoogleAuth> {
       backgroundColor: ThemeClass.purpleColor,
       body: SingleChildScrollView(
         child: Container(
+          height: SizeConfig.screenHeight,
           margin: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Obx(() =>  SizedBox(
-                  width: SizeConfig.screenWidth / 2,
+              SizedBox(
+                  width: SizeConfig.screenWidth,
                   child: ButtonWidget(
                       title: 'Google SignIn',
-                      isLoading: controller.isLoading,
+                      isLoading: controller.isLoading.value,
                       onpress: () {
                         login(controller);
-                      }))),
+                      }))
 
             ],
           ),

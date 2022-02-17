@@ -7,12 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:news_app/LocalDatabase/hive_database.dart';
+import 'package:news_app/configs/routes.dart';
 import 'package:news_app/models/user.dart';
 
 
 /// google auth service for sign in and sign out method
 class GoogleAuth extends GetxController {
-  bool isLoading = false.obs as bool;
+  RxBool isLoading = false.obs;
 
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: [
@@ -28,6 +29,7 @@ class GoogleAuth extends GetxController {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       await  HiveDatabase.setLoginStatus(true);
       User user = User(email: googleUser!.email,id: googleUser.id,name: googleUser.displayName);
+      HiveDatabase.setUser(user);
       return user;
     } catch (e) {
       Get.snackbar("Error", "$e"   ,snackPosition: SnackPosition.BOTTOM, padding: const EdgeInsets.all(10),duration: const Duration(seconds: 3));
@@ -40,7 +42,7 @@ class GoogleAuth extends GetxController {
     // await auth.signOut();
     await _googleSignIn.signOut().then((value) {});
     await HiveDatabase.setLoginStatus(false);
-
+    Get.offAllNamed(Routes.login);
     return true;
   }
 }
