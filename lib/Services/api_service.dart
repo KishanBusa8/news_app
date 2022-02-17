@@ -45,7 +45,7 @@ class ApiService extends GetxController {
        var response = await http.get(url);
        var responseBody = jsonDecode(response.body);
        count = responseBody['totalResults'];
-       print(count);
+       print(responseBody['articles'].length);
        articles = (responseBody['articles'] as List).map((e) => Article.fromJson(e)).toList();
        isLoading = RxBool(false);
      } catch (e) {

@@ -2,6 +2,9 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:news_app/Utilities/constants.dart';
 import 'package:news_app/models/article.dart';
@@ -70,6 +73,9 @@ class HiveDatabase {
       }
       if (list.where((element) => (element.source.id == article.source!.id && element.title == article.title)).isEmpty) {
         list.add(article);
+        Get.snackbar("Success!", "Added to the bookmark"   ,snackPosition: SnackPosition.BOTTOM, padding: const EdgeInsets.all(10),duration: const Duration(seconds: 2),backgroundColor: Colors.black);
+      } else {
+        Get.snackbar("Opps!", "This News is already added to the bookmark"   ,snackPosition: SnackPosition.BOTTOM, padding: const EdgeInsets.all(10),duration: const Duration(seconds: 2),backgroundColor: Colors.black);
       }
       print(list);
 

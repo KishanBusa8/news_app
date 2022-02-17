@@ -11,6 +11,7 @@ import 'package:news_app/Services/api_service.dart';
 import 'package:news_app/Utilities/constants.dart';
 import 'package:news_app/configs/size_config.dart';
 import 'package:news_app/configs/theme_data.dart';
+import 'package:news_app/customWidgets/article_widget.dart';
 import 'package:news_app/customWidgets/button_widget.dart';
 import 'package:news_app/models/article.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -94,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     apiService = Get.find();
     _pagingController.addPageRequestListener((pageKey) {
-         _fetchPage(pageKey);
+      _fetchPage(pageKey);
     });
     super.initState();
   }
@@ -119,107 +120,108 @@ class _MyHomePageState extends State<MyHomePage> {
       Scaffold(
           backgroundColor: ThemeClass.purpleColor,
           body: SingleChildScrollView(
-        child: DefaultTabController(
-          length: 2,
-          initialIndex: 0,
-          child: Column(
-            children: [
-              const SizedBox(height: 30,),
-                      FutureBuilder(
-        future: apiService.getUserGreet(),
-    builder:  (BuildContext context,
-    AsyncSnapshot<String?> snapshot) {
-          return snapshot.hasData ?  Text(snapshot.data.toString(),style: TextStyle(color: Colors.white,fontSize: 20),) : Container();
-    }),
-              const SizedBox(height: 20,),
+            child: DefaultTabController(
+              length: 2,
+              initialIndex: 0,
+              child: Column(
+                children: [
+                  const SizedBox(height: 30,),
+                  FutureBuilder(
+                      future: apiService.getUserGreet(),
+                      builder:  (BuildContext context,
+                          AsyncSnapshot<String?> snapshot) {
+                        return snapshot.hasData ?  Text(snapshot.data.toString(),style: TextStyle(color: Colors.white,fontSize: 20),) : Container();
+                      }),
+                  const SizedBox(height: 20,),
 
-              TabBar(
-                indicatorSize: TabBarIndicatorSize.tab,
-                isScrollable: true,
-                onTap: (i) {
-                  setState(() {
-                    tabIndex = i;
-                  });
-                },
-                indicator: const BubbleTabIndicator(
-                    indicatorHeight:
-                    45.0,
-                    indicatorRadius:
-                    10,
-                    indicatorColor:
-                    Colors
-                        .pink,
-                    tabBarIndicatorSize:
-                    TabBarIndicatorSize
-                        .tab,
-                    // Other flags
-                    insets:
-                    EdgeInsets
-                        .all(
-                        1),
+                  TabBar(
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    isScrollable: true,
+                    onTap: (i) {
+                      setState(() {
+                        tabIndex = i;
+                      });
+                    },
+                    indicator: const BubbleTabIndicator(
+                        indicatorHeight:
+                        45.0,
+                        indicatorRadius:
+                        10,
+                        indicatorColor:
+                        Colors
+                            .pink,
+                        tabBarIndicatorSize:
+                        TabBarIndicatorSize
+                            .tab,
+                        // Other flags
+                        insets:
+                        EdgeInsets
+                            .all(
+                            1),
+                        padding:
+                        EdgeInsets
+                            .all(
+                            5)), tabs: List.generate(tabs.length, (index) =>  Container(
                     padding:
-                    EdgeInsets
-                        .all(
-                        5)), tabs: List.generate(tabs.length, (index) =>  Container(
-                padding:
-                const EdgeInsets.all(8),
-                child: Text(
-                  tabs[index],
-                  style: const TextStyle(
-                      fontWeight:
-                      FontWeight
-                          .w600,
-                      color: Colors.white,
-                      fontSize: 18),
-                ),
-              ),),
-              ),
-              tabIndex == 0 ?  Container(
-                height: SizeConfig.screenHeight,
-                child: PagedListView<int, Article>(
-                  pagingController: _pagingController,
-                  builderDelegate: PagedChildBuilderDelegate<Article>(
-                    animateTransitions: true,
-                    noMoreItemsIndicatorBuilder: (context) => Center(child: Text('No more news found'),),
-                    noItemsFoundIndicatorBuilder: (context) => Text("no items"),
-                    itemBuilder: (context, item, index) =>
-                        ListTile(
-                          onTap: () {
-                            HiveDatabase.setBookMark(item);
-                          },
-                          leading: Icon(Icons.list),
-                          title:Text(item.title.toString() + index.toString()),
-                        ),
+                    const EdgeInsets.all(8),
+                    child: Text(
+                      tabs[index],
+                      style: const TextStyle(
+                          fontWeight:
+                          FontWeight
+                              .w600,
+                          color: Colors.white,
+                          fontSize: 18),
+                    ),
+                  ),),
                   ),
-                ),
-              ) :    Container(
-                height: SizeConfig.screenHeight,
-                child: ValueListenableBuilder(
-                  valueListenable: Hive.box(Constants.bookmarkBox).listenable(),
-                  builder: (context, Box box, widget) {
-                    // return Text("${box.get(Constants.bookmarkList)}");
-                    return box.get(Constants.bookmarkList) == null  ? Center(child: Text("There is no bookmark available",style: TextStyle(color: Colors.white),),) :  Container(
-                      height: SizeConfig.screenHeight / 2,
-                      child: ListView.builder(
-                          itemCount: box.get(Constants.bookmarkList).length,
-                          itemBuilder: (BuildContext context,int index){
-                            return ListTile(
-                              onTap: () {
-                                HiveDatabase.setBookMark(box.get(Constants.bookmarkList)![index]);
-                              },
-                              leading: Icon(Icons.list),
-                              title:Text(box.get(Constants.bookmarkList)![index].title.toString()),
-                            );
-                          }
+                  tabIndex == 0 ?  Container(
+                    height: SizeConfig.screenHeight,
+                    child: PagedListView<int, Article>(
+                      pagingController: _pagingController,
+                      padding: const EdgeInsets.only(bottom: 120),
+                      builderDelegate: PagedChildBuilderDelegate<Article>(
+                          animateTransitions: true,
+                          noMoreItemsIndicatorBuilder: (context) => Center(child: Text('No more news found',style: TextStyle(fontSize: 20,color: Colors.white),),),
+                          noItemsFoundIndicatorBuilder: (context) => Text("no items"),
+                          itemBuilder: (context, item, index) =>
+                              ArticleWidget(article: item,isBookMarked: false,onAddBookMark: () {
+                                HiveDatabase.setBookMark(item);
+                              })
+                        //        ListTile(
+                        //       onTap: () {
+                        // HiveDatabase.setBookMark(item);
+                        // },
+                        //   leading: Icon(Icons.list),
+                        //   title:Text(item.title.toString()),
+                        // )
                       ),
-                    );
-                  },
-                ),
-              )
-            ],
-          ),
-        ),
-      ));
+                    ),
+                  ) :    Container(
+                    height: SizeConfig.screenHeight,
+                    child: ValueListenableBuilder(
+                      valueListenable: Hive.box(Constants.bookmarkBox).listenable(),
+                      builder: (context, Box box, widget) {
+                        // return Text("${box.get(Constants.bookmarkList)}");
+                        return box.get(Constants.bookmarkList) == null  ? Center(child: Text("There is no bookmark available",style: TextStyle(color: Colors.white),),) :  Container(
+                          height: SizeConfig.screenHeight / 2,
+                          child: box.get(Constants.bookmarkList).length != 0 ? ListView.builder(
+                              padding: const EdgeInsets.only(bottom: 120),
+                              itemCount: box.get(Constants.bookmarkList).length,
+                              itemBuilder: (BuildContext context,int index){
+                                return ArticleWidget(article: box.get(Constants.bookmarkList)![index],isBookMarked: true, onAddBookMark: () {
+                                  HiveDatabase.removeBookMark(box.get(Constants.bookmarkList)![index]);
+                                });
+                              }
+                          ) : Center(child: Text("There is no bookmark available",style: TextStyle(color: Colors.white),),),
+                        );
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ));
 
   @override
   void dispose() {
