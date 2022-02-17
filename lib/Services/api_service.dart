@@ -10,24 +10,11 @@ import 'package:news_app/models/article.dart';
 import 'package:news_app/models/user.dart';
 
 class ApiService extends GetxController {
-  // @override
-  // void onInit() {
-  //   super.onInit();
-  //   getTopHeadLines().then((value) {
-  //     change(value, status: RxStatus.success());
-  //   },onError: (error){
-  //     change([],status: RxStatus.error(error.toString()));
-  //   });
-  // }
-  //
-  // @override
-  // void onClose() {
-  //   // TODO: implement onClose
-  //   super.onClose();
-  // }
-
-
+  /// loader
   RxBool isLoading = false.obs;
+
+
+  ///page count
   int count = 20;
 
 
@@ -37,7 +24,7 @@ class ApiService extends GetxController {
     User user = await HiveDatabase.getUser();
     return "👋 Hey, " + user.name!;
   }
-  var searchResult = [].obs;
+
 
    Future<List<Article>> getTopHeadLines(page) async {
      isLoading = RxBool(true);
@@ -61,14 +48,10 @@ class ApiService extends GetxController {
    Future<List<Article>> getArticlesFromSearch(String query) async {
      var url = Uri.parse(Constants.searchUrl + query + "&sortBy=publishedAt" + "&apiKey=${Constants.apiKey}");
      List<Article> searchResult;
-
      try {
        var response = await http.get(url);
        var responseBody = jsonDecode(response.body);
-
        searchResult =(responseBody['articles'] as List).map((e) => Article.fromJson(e)).toList();
-       // change(articles, status: RxStatus.success());
-
      } catch (e) {
        Get.snackbar("Error", "$e"   ,snackPosition: SnackPosition.BOTTOM, padding: const EdgeInsets.all(10),duration: const Duration(seconds: 3));
        return [];
@@ -76,6 +59,5 @@ class ApiService extends GetxController {
      return searchResult;
    }
 
-   // Stream<BoxEvent> bookMarkArticlesStream =  Hive.box(Constants.bookmarkBox).watch(key: Constants.bookmarkList);
 
 }

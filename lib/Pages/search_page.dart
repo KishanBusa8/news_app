@@ -81,7 +81,7 @@ class _SearchPageState extends State<SearchPage> {
                             focusNode: searchFocus,
                             style: TextStyle(
                                 color: Colors.black, fontWeight: FontWeight.w500),
-                            onChanged: (text) {
+                            onChanged: (text) {   /////user debounce method for less api call
                               if (pastText != text) {
                                 if (_debounce.isBlank! &&_debounce!.isActive) {
                                   _debounce!.cancel();

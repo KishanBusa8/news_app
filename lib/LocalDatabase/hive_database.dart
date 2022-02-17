@@ -13,19 +13,23 @@ import 'package:news_app/models/user.dart';
 import 'package:path_provider/path_provider.dart';
 
 class HiveDatabase {
-  //INITIALIZE DATABASE
+  //INITIALIZE DATABASE and register models for save models direct to the local databse
   static initialize() async {
     Directory directory = await getApplicationDocumentsDirectory();
     log("Initializing Hive..at $directory");
     // Hive.init(directory.path);
     Hive..init(directory.path)..registerAdapter(ArticleAdapter())..registerAdapter(SourceAdapter())..registerAdapter(UserAdapter());
   }
+
+  /// set user is loggedIn true or false
   static setLoginStatus(bool isLoggedIn) async {
     if (!Hive.isBoxOpen(Constants.loginStatusBox)) {
       await Hive.openBox(Constants.loginStatusBox);
     }
     Hive.box(Constants.loginStatusBox).put(Constants.isLoggedIn,isLoggedIn);
   }
+
+  /// set user in to local database
   static setUser(User user) async {
     if (!Hive.isBoxOpen(Constants.userBox)) {
       await Hive.openBox(Constants.userBox);
@@ -33,6 +37,8 @@ class HiveDatabase {
     Hive.box(Constants.userBox).put(Constants.userData,user);
   }
 
+
+  ///get user from hive local database
   static Future<User> getUser() async {
     if (!Hive.isBoxOpen(Constants.userBox)) {
       await Hive.openBox(Constants.userBox);
@@ -40,6 +46,7 @@ class HiveDatabase {
     return Hive.box(Constants.userBox).get(Constants.userData);
   }
 
+  /// get login statues for page redirection
   static Future<bool> getLoginStatus() async {
     if (await Hive.boxExists(Constants.loginStatusBox)) {
       if (!Hive.isBoxOpen(Constants.loginStatusBox)) {
@@ -51,18 +58,8 @@ class HiveDatabase {
       return false;
     }
   }
-  static Future<List<Article>> getBookMarkArticles() async {
-    if (await Hive.boxExists(Constants.bookmarkBox)) {
-      if (!Hive.isBoxOpen(Constants.bookmarkBox)) {
-        await Hive.openBox(Constants.bookmarkBox);
-      }
-      List list = Hive.box(Constants.bookmarkBox).get(Constants.bookmarkList);
-      List<Article> articles = list.map((e) => Article.fromJson(e)).toList();
-      return articles;
-    } else {
-      return [];
-    }
-  }
+
+  /// set bookmarked Article in to local database list
   static Future setBookMark(Article article) async {
       if (!Hive.isBoxOpen(Constants.bookmarkBox)) {
         await Hive.openBox(Constants.bookmarkBox);
@@ -77,12 +74,11 @@ class HiveDatabase {
       } else {
         Get.snackbar("Opps!", "This News is already added to the bookmark"   ,snackPosition: SnackPosition.BOTTOM, padding: const EdgeInsets.all(10),duration: const Duration(seconds: 2),backgroundColor: Colors.black);
       }
-      print(list);
-
       Hive.box(Constants.bookmarkBox).put(Constants.bookmarkList,list);
-
     return true;
   }
+
+  /// remove bookMark from the database
   static Future removeBookMark(Article article) async {
     if (!Hive.isBoxOpen(Constants.bookmarkBox)) {
       await Hive.openBox(Constants.bookmarkBox);

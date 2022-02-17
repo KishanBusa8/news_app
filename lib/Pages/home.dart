@@ -134,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: PagedListView<int, Article>(
                       pagingController: _pagingController,
                       padding: const EdgeInsets.only(bottom: 160),
-                      builderDelegate: PagedChildBuilderDelegate<Article>(
+                      builderDelegate: PagedChildBuilderDelegate<Article>(  /// for pagination
                           animateTransitions: true,
                           noMoreItemsIndicatorBuilder: (context) => Center(child: Text('No more news found',style: TextStyle(fontSize: 20,color: Colors.white),),),
                           noItemsFoundIndicatorBuilder: (context) => Center(child: Text('No itemas',style: TextStyle(fontSize: 20,color: Colors.white),),),
@@ -142,21 +142,13 @@ class _MyHomePageState extends State<MyHomePage> {
                               ArticleWidget(article: item,isBookMarked: false,onAddBookMark: () {
                                 HiveDatabase.setBookMark(item);
                               })
-                        //        ListTile(
-                        //       onTap: () {
-                        // HiveDatabase.setBookMark(item);
-                        // },
-                        //   leading: Icon(Icons.list),
-                        //   title:Text(item.title.toString()),
-                        // )
                       ),
                     ),
                   ) :    Container(
                     height: SizeConfig.screenHeight,
-                    child: ValueListenableBuilder(
+                    child: ValueListenableBuilder( /// it will listen local database changes and update the UI
                       valueListenable: Hive.box(Constants.bookmarkBox).listenable(),
                       builder: (context, Box box, widget) {
-                        // return Text("${box.get(Constants.bookmarkList)}");
                         return box.get(Constants.bookmarkList) == null  ? Center(child: Text("There is no bookmark available",style: TextStyle(color: Colors.white),),) :  Container(
                           height: SizeConfig.screenHeight / 2,
                           child: box.get(Constants.bookmarkList).length != 0 ? ListView.builder(

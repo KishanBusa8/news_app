@@ -17,6 +17,7 @@ import 'package:news_app/customWidgets/article_details.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
+    ///initialize firebase and hive for local database
     await Firebase.initializeApp();
     await HiveDatabase.initialize();
 

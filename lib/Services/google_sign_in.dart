@@ -23,7 +23,6 @@ class GoogleAuth extends GetxController {
   );
 
   Future<User?> googleSignIn() async {
-
     try {
       googleSignOut();
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
@@ -39,7 +38,6 @@ class GoogleAuth extends GetxController {
   }
 
   Future<bool> googleSignOut() async {
-    // await auth.signOut();
     await _googleSignIn.signOut().then((value) {});
     await HiveDatabase.setLoginStatus(false);
     Get.offAllNamed(Routes.login);

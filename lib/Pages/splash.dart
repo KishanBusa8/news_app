@@ -28,7 +28,7 @@ class _SplashState extends State<Splash> {
     super.initState();
   }
 
-
+///get user is loggedin or not if user is loggediIn then redirect to the home page otherwise login page.
   loadPage() {
      HiveDatabase.getLoginStatus().then((value) {
        Hive.openBox(Constants.bookmarkBox);
