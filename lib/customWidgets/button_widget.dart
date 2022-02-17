@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:news_app/configs/dimens.dart';
 import 'package:news_app/configs/theme_data.dart';
 
@@ -7,7 +8,7 @@ class ButtonWidget extends StatelessWidget {
   const ButtonWidget(
       {Key? key,
         required this.title,
-        this.isLoading = false,
+         this.isLoading = false,
         this.isDisable = false,
         required this.onpress})
       : super(key: key);

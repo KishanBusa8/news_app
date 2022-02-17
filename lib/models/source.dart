@@ -1,38 +1,34 @@
 import 'dart:convert';
 
 import 'package:hive/hive.dart';
-part 'user.g.dart';
+part 'source.g.dart';
 
-@HiveType(typeId: 3)
-class User {
-  User(
+@HiveType(typeId: 1)
+class Source {
+  Source(
       {this.name,
         this.id,
-        this.email,
       });
 
   @HiveField(0)
   String? id;
   @HiveField(1)
   String? name;
-  @HiveField(2)
-  String? email;
 
 
-  factory User.fromRawJson(String str) =>
-      User.fromJson(json.decode(str));
+
+  factory Source.fromRawJson(String str) =>
+      Source.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory User.fromJson(Map<String, dynamic> json) => User(
+  factory Source.fromJson(Map<String, dynamic> json) => Source(
     name: json["name"],
     id: json["id"],
-    email: json["email"],
   );
 
   Map<String, dynamic> toJson() => {
     "name": name,
     "id": id,
-    "email": email,
   };
 }
