@@ -31,10 +31,13 @@ class ApiService extends GetxController {
   int count = 20;
 
 
+
+
   Future<String?> getUserGreet() async {
     User user = await HiveDatabase.getUser();
-    return "👋 Hey " + user.name!;
+    return "👋 Hey, " + user.name!;
   }
+  var searchResult = [].obs;
 
    Future<List<Article>> getTopHeadLines(page) async {
      isLoading = RxBool(true);
@@ -43,8 +46,8 @@ class ApiService extends GetxController {
      try {
        var response = await http.get(url);
        var responseBody = jsonDecode(response.body);
+       print(responseBody);
        count = responseBody['totalResults'];
-       print(responseBody['articles'].length);
        articles = (responseBody['articles'] as List).map((e) => Article.fromJson(e)).toList();
        isLoading = RxBool(false);
      } catch (e) {
@@ -56,24 +59,21 @@ class ApiService extends GetxController {
    }
 
    Future<List<Article>> getArticlesFromSearch(String query) async {
-     isLoading = RxBool(true);
-     List<Article> articles;
-
      var url = Uri.parse(Constants.searchUrl + query + "&sortBy=publishedAt" + "&apiKey=${Constants.apiKey}");
+     List<Article> searchResult;
+
      try {
        var response = await http.get(url);
        var responseBody = jsonDecode(response.body);
 
-       articles = (responseBody['articles'] as List).map((e) => Article.fromJson(e)).toList();
+       searchResult =(responseBody['articles'] as List).map((e) => Article.fromJson(e)).toList();
        // change(articles, status: RxStatus.success());
 
-       isLoading = RxBool(false);
      } catch (e) {
        Get.snackbar("Error", "$e"   ,snackPosition: SnackPosition.BOTTOM, padding: const EdgeInsets.all(10),duration: const Duration(seconds: 3));
-       isLoading = RxBool(false);
        return [];
      }
-     return articles;
+     return searchResult;
    }
 
    // Stream<BoxEvent> bookMarkArticlesStream =  Hive.box(Constants.bookmarkBox).watch(key: Constants.bookmarkList);

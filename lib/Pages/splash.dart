@@ -31,9 +31,10 @@ class _SplashState extends State<Splash> {
 
   loadPage() {
      HiveDatabase.getLoginStatus().then((value) {
+       Hive.openBox(Constants.bookmarkBox);
+       Hive.openBox(Constants.userBox);
        if (value) {
-         Hive.openBox(Constants.bookmarkBox);
-         Hive.openBox(Constants.userBox);
+
          Get.offAllNamed(Routes.homePage);
        } else {
          Get.offAllNamed(Routes.login);

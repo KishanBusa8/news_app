@@ -9,6 +9,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:news_app/LocalDatabase/hive_database.dart';
 import 'package:news_app/Services/api_service.dart';
 import 'package:news_app/Utilities/constants.dart';
+import 'package:news_app/configs/routes.dart';
 import 'package:news_app/configs/size_config.dart';
 import 'package:news_app/configs/theme_data.dart';
 import 'package:news_app/customWidgets/article_widget.dart';
@@ -16,66 +17,7 @@ import 'package:news_app/customWidgets/button_widget.dart';
 import 'package:news_app/models/article.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-// class MyHomePage extends GetWidget<ApiService> {
-//
-//
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         // Here we take the value from the MyHomePage object that was created by
-//         // the App.build method, and use it to set our appbar title.
-//         title: FutureBuilder(
-//         future: controller.getUserGreet(),
-//     builder:  (BuildContext context,
-//     AsyncSnapshot<String?> snapshot) {
-//           return snapshot.hasData ?  Text(snapshot.data.toString()) : Container();
-//     }),
-//       ),
-//       body: Container(
-//
-//         child: SingleChildScrollView(
-//           child: Column(
-//
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: <Widget>[
-//
-//               FutureBuilder(
-//                 future: controller.getTopHeadLines(),
-//                   builder:  (BuildContext context,
-//               AsyncSnapshot<List<Article>> snapshot) {
-// print(snapshot.data!.length);
-//       return snapshot.hasData ?  Container(
-//         height: SizeConfig.screenHeight / 2,
-//         child: ListView.builder(
-//               itemCount: snapshot.data!.length,
-//               itemBuilder: (BuildContext context,int index){
-//                 return ListTile(
-//                   onTap: () {
-//                     HiveDatabase.setBookMark(snapshot.data![index]);
-//                   },
-//                     leading: Icon(Icons.list),
-//                     title:Text(snapshot.data![index].title.toString()),
-//                 );
-//               }
-//         ),
-//       ) : const CircularProgressIndicator();
-//
-//       }),
-//               ValueListenableBuilder(
-//                 valueListenable: Hive.box(Constants.bookmarkBox).listenable(),
-//                 builder: (context, Box box, widget) {
-//                   return Text("${box.get(Constants.bookmarkList)}");
-//                 },
-//               )
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
+
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -126,12 +68,23 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Column(
                 children: [
                   const SizedBox(height: 30,),
-                  FutureBuilder(
-                      future: apiService.getUserGreet(),
-                      builder:  (BuildContext context,
-                          AsyncSnapshot<String?> snapshot) {
-                        return snapshot.hasData ?  Text(snapshot.data.toString(),style: TextStyle(color: Colors.white,fontSize: 20),) : Container();
-                      }),
+                 Padding(
+                   padding: const EdgeInsets.only(left: 10,right: 10),
+                   child: Row(
+                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                     children: [
+                       FutureBuilder(
+                           future: apiService.getUserGreet(),
+                           builder:  (BuildContext context,
+                               AsyncSnapshot<String?> snapshot) {
+                             return snapshot.hasData ?  Text(snapshot.data.toString(),style: TextStyle(color: Colors.white,fontSize: 20),) : Container();
+                           }),
+                       IconButton(onPressed: () {
+                         Get.toNamed(Routes.searchPage);
+                       }, icon: Icon(Icons.search))
+                     ],
+                   ),
+                 ),
                   const SizedBox(height: 20,),
 
                   TabBar(
@@ -175,15 +128,16 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),),
                   ),
+                  const SizedBox(height: 10,),
                   tabIndex == 0 ?  Container(
                     height: SizeConfig.screenHeight,
                     child: PagedListView<int, Article>(
                       pagingController: _pagingController,
-                      padding: const EdgeInsets.only(bottom: 120),
+                      padding: const EdgeInsets.only(bottom: 160),
                       builderDelegate: PagedChildBuilderDelegate<Article>(
                           animateTransitions: true,
                           noMoreItemsIndicatorBuilder: (context) => Center(child: Text('No more news found',style: TextStyle(fontSize: 20,color: Colors.white),),),
-                          noItemsFoundIndicatorBuilder: (context) => Text("no items"),
+                          noItemsFoundIndicatorBuilder: (context) => Center(child: Text('No itemas',style: TextStyle(fontSize: 20,color: Colors.white),),),
                           itemBuilder: (context, item, index) =>
                               ArticleWidget(article: item,isBookMarked: false,onAddBookMark: () {
                                 HiveDatabase.setBookMark(item);
@@ -206,7 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         return box.get(Constants.bookmarkList) == null  ? Center(child: Text("There is no bookmark available",style: TextStyle(color: Colors.white),),) :  Container(
                           height: SizeConfig.screenHeight / 2,
                           child: box.get(Constants.bookmarkList).length != 0 ? ListView.builder(
-                              padding: const EdgeInsets.only(bottom: 120),
+                              padding: const EdgeInsets.only(bottom: 160),
                               itemCount: box.get(Constants.bookmarkList).length,
                               itemBuilder: (BuildContext context,int index){
                                 return ArticleWidget(article: box.get(Constants.bookmarkList)![index],isBookMarked: true, onAddBookMark: () {

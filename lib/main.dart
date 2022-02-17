@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:news_app/LocalDatabase/hive_database.dart';
 import 'package:news_app/Pages/home.dart';
 import 'package:news_app/Pages/login.dart';
+import 'package:news_app/Pages/search_page.dart';
 import 'package:news_app/Pages/splash.dart';
 import 'package:news_app/configs/instance_binding.dart';
 import 'package:news_app/configs/routes.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         Routes.login: (context) => LoginPage(),
         Routes.homePage: (context) =>  MyHomePage(),
         Routes.newsDetailPage: (context) => ArticleDetails(),
+        Routes.searchPage: (context) => SearchPage(),
 
       },
       theme: ThemeClass.themeData,

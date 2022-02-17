@@ -7,6 +7,7 @@ import 'package:news_app/configs/routes.dart';
 import 'package:news_app/configs/theme_data.dart';
 import 'package:news_app/customWidgets/article_details.dart';
 import 'package:news_app/models/article.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ArticleWidget extends StatelessWidget {
   const ArticleWidget(
@@ -69,9 +70,10 @@ class ArticleWidget extends StatelessWidget {
                     }, icon:  Icon(isBookMarked ? Icons.bookmark :Icons.bookmark_add  ),color: Colors.amber,),
                     IconButton(
                         iconSize: 20,
-                        onPressed: () {
-                      onAddBookMark();
-                    }, icon: Icon(Icons.open_in_browser,color: Colors.amber,))
+                        onPressed: () async {
+                          if (!await launch(article.url!)) throw 'Could not launch';
+
+                        }, icon: Icon(Icons.open_in_browser,color: Colors.amber,))
                   ],
                 ))
 
